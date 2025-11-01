@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  app1:
+    build: ./
+    container_name: app1
+    # command to run the app
+    # sh-c means to run the command in shell
+    command: sh -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    # or command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    # host port mapping
+    # here container port is 8000 and 8001 is host port
+    ports:
+      - "8001:8000"
+
+    # volume means mapping the local folder to container folder 
+    volumes:
+      - ./:/app
+  
+  app2:
+    build: ./
+    container_name: app2
+    command: sh -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    # host port mapping
+    # here container port is 8000 and 8002 is host port
+    ports:
+      - "8002:8000"
+
+   # volume means mapping the local folder to container folder 
+    volumes:
+      - ./:/app
+    
+  app3:
+    build: ./
+    container_name: app3
+    command: sh -c "uvicorn main:app --host 0.0.0.0 --port 8000 --reload"
+    # host port mapping
+    # here container port is 8000 and 8003 is host port
+    ports:
+      - "8003:8000"
+
+    # volume means mapping the local folder to container folder 
+    volumes:
+      - ./:/app
+  
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+
+    # nginx by defaults run on port 80 and in host machine 
+    # it is mapped to 8000 
+    ports:
+      - "8000:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    
+    
+
+
+# here multiple services are defined for load balancing purpose
+# image of each service is same
+# but port mapping is different for each service
